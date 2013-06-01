@@ -1,0 +1,71 @@
+// Description: This program is designed to test the LList class. 
+#include <cstdlib> 
+#include <iostream> 
+#include <fstream> 
+#include "CoordPt.h"
+#include <string>
+#include "LList.tmp.h"
+
+using namespace std; 
+ 
+template <class T>
+void ProcessFile(string filename, LList<T>& LL);
+
+int main (int argc, char * argv[]) { 
+        LList<int> L1; // linked list
+        LList<string> L2; // linked list
+	LList <CoordinatePoint> L3;	
+
+	ProcessFile("intlist.txt", L1);
+	ProcessFile("stringlist.txt", L2);
+
+	L3.InsertLast (CoordinatePoint (1,2)); 
+	cout << L3 << endl; 
+	cout << L3.Size() << endl; 
+
+	return 0;	
+}
+
+template <class T>
+void ProcessFile(string filename, LList<T>& LL) {
+	T value;
+	char action;
+	ifstream ins;
+	
+	ins.open(filename.c_str());	
+        if (ins.fail ()) { 
+                cerr << "No file " << filename << " found\n"; 
+		return;
+        } 
+        while (ins >> action) {
+	      switch (action) { 
+	                   case 'D' : if (LL.DeleteFirst ()) 
+	                        cout << "First value deleted from list\n"; 
+	                   else 
+	                        cout << "First value not deleted from list\n"; 
+	                   break; 
+	         case 'E' : if (LL.DeleteLast ()) 
+	                        cout << "Last value deleted from list\n"; 
+                           else 
+                                cout << "Last value not deleted from list\n"; 
+                           break; 
+                case 'I' : ins >> value; 
+                           if (LL.InsertFirst (value)) 
+                                cout << value << " inserted at front of list\n"; 
+                           else 
+                                cout << value << " not inserted at front of list\n"; 
+                           break; 
+                case 'J' : ins >> value; 
+                           if (LL.InsertLast (value)) 
+                                cout << value << " inserted at end of list\n"; 
+                           else 
+                                cout << value << " not inserted at end of list\n"; 
+                           break; 
+                case 'S' : cout << LL.Size() << endl; 
+                           break; 
+                case 'W' : cout << LL << endl; 
+                           break; 
+                default :  cout << action << " is not a valid option\n"; 
+            }
+	} 
+} 

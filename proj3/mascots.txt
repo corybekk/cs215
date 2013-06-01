@@ -1,0 +1,44 @@
+University
+Mascot
+Last Score
+
+Cal Poly-San Luis Obispo
+Mustangs
+0
+
+Fresno State
+Bulldogs
+1
+
+Humboldt State
+Lumberjacks
+1
+
+San Diego State
+Aztecs
+1
+
+California Maritime Academy
+Keelhaulers
+1
+
+CSULA
+Golden Eagles
+0
+
+San Francisco State
+Gators
+0
+
+Cal Poly-Pomona
+Broncos
+0
+
+Chico State
+Wilcats
+1
+
+San Jose State
+Spartons
+1
+

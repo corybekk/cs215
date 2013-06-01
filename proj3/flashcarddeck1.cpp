@@ -1,0 +1,332 @@
+//Cory Bekker
+//course: cs215
+//project 3
+//**************
+
+#include <iostream>
+#include <sstream>
+#include "flashcard.h"
+#include "flashcarddeck.h"
+#include <vector>
+#include <fstream>
+#include <cctype>
+#include <algorithm>
+
+bool Play_Wrong_or_right();
+void UserPercent(int CorrectAnswers,int SIZE);
+int MakeArray(string inputfile,string Row[], int ArraySize); 
+
+using namespace std;
+
+//=========================================================
+//Default Constructor
+//Description: sets the defaults for the class member variables
+//==========================================================
+FlashCardDeck::FlashCardDeck(){
+
+  vector<FlashCard*> deck(0); //A deck of cards "played before" or "not played before" 
+  vector<FlashCard*> last_answered_wrong(0); // only the cards answered wrong last time
+  string filename =""; // file with deck info
+  bool valid = false;  // TRUE if this deck has been initialized properly (read from a valid file)
+  bool played_before = false; // TRUE if the user has played this deck before
+  
+}
+//=========================================================
+//Copy Constructor.
+//Description: Copies the fields of a class object
+//Parameter: passes "flashcarddeck other", which is a class
+//object.
+//========================================================= 
+FlashCardDeck:: FlashCardDeck(const FlashCardDeck& other){
+
+  deck = other.deck; // sets other.deck to "deck" that is inside the class
+  last_answered_wrong = other.last_answered_wrong;// does the same as aboce
+  filename = other.filename;
+  valid = other.valid;
+  played_before = other.played_before;
+
+}
+//=========================================================
+//Constructor.
+//Description: Read a flash card deck from the given input 
+//file, Should be able to handle new or unplayed decks.
+//Parameter: "filename" is the input file name the user
+//types in. Fucntion returns nothing, but creates decks.
+//=========================================================
+FlashCardDeck:: FlashCardDeck(string filename){
+  
+  ifstream file;//used to open filename 
+  int MAX = 0;// the max amount of lines in the file
+  int currentSpot =0;// the current line being read from the file
+  string row[1000];// each line of the file
+  string sentence;// make a string for the file line to read into     
+  
+  MAX= MakeArray(filename,row,MAX);// calles MakeArray function, which creates an array of lines from the file
+
+  
+  while(row[currentSpot]=="\n" or row[currentSpot]=="\t" or row[currentSpot]=="\0"){
+    currentSpot++;// bypasses all blank space in the begining of the file, just in case
+  }
+  Frontcatagory=row[currentSpot];//the catagory printed when the game starts
+  currentSpot++;// moves down a line 
+  Backcatagory=row[currentSpot];// the catagory of expected answers
+  currentSpot++;//moves down a line
+  
+  if(row[currentSpot]=="Last Score"){
+    Make_Played_Before(row,MAX,currentSpot);// if the 3rd row has "last score" it means the deck has been played before
+  }
+  else{
+    Make_unplayed_deck(row,MAX,currentSpot);// if it doesn't have "last score" the deck has not been played
+  }
+  file.close();//close file
+}
+//=========================================================
+//Destructor
+//description:deallocates memory
+//=========================================================
+FlashCardDeck::~FlashCardDeck(){
+  int i =0;
+  delete deck[i];
+}
+//=========================================================
+//Quiz function
+//description: quizes a user on a flashcard deck.
+//Parameters: "ins" is "cin", "outs" is "cout" which are used
+//for taking the users input and to cout the catagories.
+//"wrong" is true if the user wants to play the questions 
+//they got wrong last time. "file" is the deck file"
+//function returns false, no particular affect.
+//=========================================================
+bool FlashCardDeck::Quiz(istream& ins, ostream& outs, bool wrong,string file){
+  
+  int right=0;// how many questions the user got right
+   
+  if(played_before == true){//checks if the user played the deck before
+    if(Play_Wrong_or_right() == true){//calls function play_wrong_or_right to see what cards they want to play
+      wrong=true;// true if they want to play the cards they got wrong
+    }
+    else{
+      wrong=false;// false if they want to play the full deck
+    }
+  }
+  outs<<endl;
+  outs<<"Front of flash card: "<<Frontcatagory<<endl; // prints the catagorie of deck
+  outs<<"Back of flash card: "<<Backcatagory<<endl<<endl;
+  random_shuffle(deck.begin(),deck.end());// puts the flash cards in random order
+  if(wrong == true){// if true playes the cards they got wrong
+    for(int i = 0; i<last_answered_wrong.size();i++){
+      last_answered_wrong[i]->Quiz(ins,cout);// calles quiz function to ask flashcard question
+      if(last_answered_wrong[i]->CorrectLastTime()==true){//calles accessor function to see if they got the card right
+        right++;// if they did get the card right, update how many they got
+      }
+    }
+    UserPercent(right,last_answered_wrong.size());// prints how many they got write and their percent
+  }
+  else{
+    for(int i = 0; i<deck.size();i++){ // does the same as above, only but the full deck....
+      deck[i]->Quiz(ins,cout);
+      if(deck[i]->CorrectLastTime()==true){
+	right++;
+      }
+    }
+    UserPercent(right,deck.size());
+  }  
+  PrintToFile(file);//calls function that  prints the results back to the file
+  return 0;
+}
+//=========================================================
+//Make_Played_before function
+//description: makes a flashcard deck that has been played before
+//parameters: "row" is the row/line in the file being read, used 
+//to make flashcard. "ArraySize" is the size of the array made from
+//the file. "CurrentLine" is the current line being read.
+//no return value
+//=========================================================
+void FlashCardDeck::Make_Played_Before(string Row[],int ArraySize, int CurrentLine){
+
+  string front;// front of flashcard
+  string back;// back of flashcard
+  bool correctLast;// if they got the card right or wrong
+
+  played_before=true;// intialises the card and updates that it has been played
+  CurrentLine++; // this is a empty line in the file                                                                              
+  CurrentLine++; // this is the beginning of the first flashcard                                                      
+  while(CurrentLine<ArraySize){
+    if(Row[CurrentLine]=="\n" or Row[CurrentLine]=="\t" or Row[CurrentLine]=="\0"){//checks for wrong format in file
+      cout<<"error: to many spaces in between flashcard decks... line: "<<CurrentLine<<endl;//gives specific error
+      exit(1);
+    }
+    front = Row[CurrentLine];//sets currentt line of the file to front of flashcard
+    CurrentLine++;
+    if(Row[CurrentLine]=="\n" or Row[CurrentLine]=="\t" or Row[CurrentLine]=="\0"){
+      cout<<"error: to many spaces in between flashcard decks... line: "<<CurrentLine<<endl;
+      exit(1);
+    }
+    back = Row[CurrentLine];// sets current line to back of flashcard
+    CurrentLine++;
+    if(Row[CurrentLine]=="\n" or Row[CurrentLine]=="\t" or Row[CurrentLine]=="\0"){
+      cout<<"error: this card has not been played before... line: "<<CurrentLine<<endl;
+      exit(1);
+    }
+    if(Row[CurrentLine]=="1"){// checks if the flashcard was answered correctly
+      correctLast=true;// this updates the card saying wither it was answer correct                                                    
+    }
+    else{
+      correctLast=false;// if the card was incorrect it adds it to last_answered_wrong                                               
+      last_answered_wrong.push_back(new FlashCard(front,back,correctLast));// creates a deck of the cards that were answered wrong
+    }
+    CurrentLine++;
+    CurrentLine++;
+    deck.push_back(new FlashCard(front,back,correctLast));//creates the full deck incase the user wants to play the full deck        
+    if(CurrentLine==ArraySize-1)break;//so it doesnt read last line                                  
+  }
+}
+//=========================================================
+//Make_unplayed_deck function
+//Description: makes a deck of cards that has not been played before
+//Parameters:"row" is the row/line in the file being read, used
+//to make flashcard. "ArraySize" is the size of the array made from
+//the file. "CurrentLine" is the current line being read.
+//no return value
+//=========================================================
+void FlashCardDeck::Make_unplayed_deck(string Row[],int ArraySize, int CurrentLine){
+
+  string front;// front of flashcard
+  string back;// back of flashcard
+  
+  CurrentLine++;//update current line in file
+  while(CurrentLine<ArraySize){
+    front = Row[CurrentLine];// sets the front of the flashcard
+    CurrentLine++;
+    if(Row[CurrentLine]=="\n" or Row[CurrentLine]=="\t" or Row[CurrentLine]=="\0"){//give error if spacing is wrong
+      cout<<"error: to many spaces in between flashcard decks... line: "<<CurrentLine<<endl;
+      exit(1);
+    }
+    back = Row[CurrentLine];//sets back of the flashcard
+    CurrentLine++;
+    if(Row[CurrentLine]=="\n" or Row[CurrentLine]=="\t" or Row[CurrentLine]=="\0"){//must be a empty line for it to update 
+      CurrentLine++;
+    }
+    deck.push_back(new FlashCard(front,back));// creates a new flashcard deck
+    if(CurrentLine==ArraySize-1)break;//so it doesnt read last line
+  }
+  played_before = false;// this deck has not been played before because it does not contain "last score"
+}
+//=========================================================
+//PrintToFile function
+//Description: This function prints the answers the user got
+//to a new file in "played before" format.
+//Parameters: "filename" is the file that is written to.
+//returns nothing.
+//=========================================================
+void FlashCardDeck::PrintToFile(string filename){
+  
+  ofstream outsfile;//created so I can write out to a file
+  
+  outsfile.open(filename.c_str());//makes a file to write to 
+  if(outsfile.fail()){// gives error if it cannot create the file
+    cout<<"could not create new file"<<endl;
+  }
+  outsfile<<Frontcatagory<<endl;// prints the front catagory to the new file
+  outsfile<<Backcatagory<<endl;// prints the back catagory to the new file
+  outsfile<<"Last Score"<<endl;// prints "last score" so for later, the program knows it has been played before
+  outsfile<<endl;
+  
+  for(int i =0; i<deck.size();i++){//write info to new file, all flashcards
+    deck[i]->WriteCard(outsfile); //calles writcard function which writes answer, front and back
+  }
+  outsfile.close();
+}
+//=========================================================
+//Play_Wrong_or_right function
+//Description: asks the user if they want to play the full deck
+//or the flashcards they got wrong before.
+//returns true if the user wants to play the flashcards they 
+//got wrong.
+//=========================================================
+bool Play_Wrong_or_right(){
+   
+  string Input1or2;// the users input
+  
+  cout<<endl;
+  cout<<"Would you like to play..."<<endl<<endl;
+  cout<<"1. The entire deck?"<<endl;
+  cout<<"2. just the ones you got wrong last time?"<<endl<<endl;;
+  cout<<"Please enter (playfull or playwrong): ";
+  
+  while(Input1or2!="playfull" or Input1or2!="playwrong"){// while the user does not put in correct input it continues to ask for input
+    
+    cin>>Input1or2;// askes for users input
+    
+    if(Input1or2=="playfull"){// if false, they want to play the full deck
+      return false;
+    }
+    if(Input1or2=="playwrong"){// if true, they want to play the cards they got wrong
+      return true;
+    }
+    cout<<"incorrect input, please try again :";
+  }
+}  
+//=========================================================
+//MakeArray function
+//Description: makes a array of lines from a file. each 
+//line is a flashcarddeck file. 
+//parameter: "inputfile" is the file that contains the decks.
+//"Row" is each row/line of the file. "ArraySize" is the 
+//size of the array and/or how many decks there are.
+//REturns the size of the array for furthur use. 
+//=========================================================
+int MakeArray(string inputfile,string Row[], int ArraySize){
+
+  ifstream file;// used to open file
+  string sentence;// each line of the file is copied into the sentence variable
+  
+  file.open(inputfile.c_str());// open file
+  if(file.fail()){// give error if fail to opem
+    cout<<"could not open file"<<endl;
+    exit(1);
+  }
+  
+  while(!file.eof()){// reads till the end of the file
+    getline(file,sentence);// get the full line of the file and copy it to sentence variable
+    Row[ArraySize]=sentence;// create an array
+    ArraySize++;
+  }
+  
+  if(ArraySize<5){// if there are less than five lines, there cannot be a correct flashcarddeck
+    cout<<"not enough flashcards in deck"<<endl;
+    exit(1);
+  }
+  return ArraySize;
+}
+//=========================================================
+//UserPercent Function
+//Descriptiong: prints out how many flashcards the user got
+//right and their percentage.
+//Parameters: "CorrectAnswers" is the number of flashcards
+//the user got right."SIZE" is the amount of flashcards
+//in the deck they tried to answer.
+//=========================================================
+void UserPercent(int CorrectAnswers,int SIZE){
+
+  float correctanswers = 0.0;// the amount of answer the user got right changed to float
+  float size =0.0;// the number of flashcards changed to float
+  float percent =0.0;// the percentage they user got right
+  
+  correctanswers=CorrectAnswers;// changes to float
+  size = SIZE;//changes to float
+  percent = correctanswers / size;// divides correctanswers by size
+  percent = percent * 100;//multiplies by 100 to roudn the numbers
+
+  if(CorrectAnswers==SIZE){//so it prints 100 and not 1%
+    percent=100;
+  }
+  if(CorrectAnswers== 0){// so it doesn't print a garbage number
+    percent=0;
+  }
+
+  cout<<"ROUND SUMMARY:"<<endl;// prints the sumary to screen 
+  cout<<"You got "<<CorrectAnswers<<" of "<<SIZE<<" right ";
+  cout<<"("<<percent<<"%)."<<endl;
+}
+

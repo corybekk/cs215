@@ -1,0 +1,404 @@
+Senator
+State (2-letter abbreviation)
+Last Score
+
+Patty Murray
+WA
+0
+
+Jon Tester
+MT
+0
+
+Michael Bennet
+CO
+0
+
+Rob Portman
+OH
+0
+
+Dick Durbin
+IL
+0
+
+David Vitter
+LA
+0
+
+Marco Rubio
+FL
+0
+
+Olympia Snowe
+ME
+0
+
+Richard Lugar
+IN
+0
+
+Mike Enzi
+WY
+0
+
+John Hoeven
+ND
+0
+
+Ben Cardin
+MD
+0
+
+Bob Corker
+TN
+0
+
+Lisa Murkowski
+AK
+0
+
+Pat Toomey
+PA
+0
+
+Jeanne Shaheen
+NH
+0
+
+Bob Menendez
+NJ
+0
+
+Saxby Chambliss
+GA
+0
+
+Mitch McConnell
+KY
+0
+
+John Kerry
+MA
+0
+
+Mark Warner
+VA
+0
+
+Orrin Hatch
+UT
+0
+
+Kelly Ayotte
+NH
+0
+
+Joe Lieberman
+CT
+0
+
+Tom Carper
+DE
+0
+
+Carl Levin
+MI
+0
+
+Dan Coats
+IN
+0
+
+Chuck Schumer
+NY
+0
+
+Kirsten Gillibrand
+NY
+0
+
+Frank Lautenberg
+NJ
+0
+
+Pat Roberts
+KS
+0
+
+Herb Kohl
+WI
+0
+
+Richard Blumenthal
+CT
+0
+
+Sherrod Brown
+OH
+0
+
+Mark Begich
+AK
+0
+
+Mike Lee
+UT
+0
+
+Tom Coburn
+OK
+0
+
+Richard Burr
+NC
+0
+
+Barbara Boxer
+CA
+0
+
+Mike Crapo
+ID
+0
+
+Kent Conrad
+ND
+0
+
+Tim Johnson
+SD
+0
+
+Daniel Inouye
+HI
+0
+
+Jim DeMint
+SC
+0
+
+Bernie Sanders
+VT
+0
+
+John Thune
+SD
+0
+
+Jeff Merkley
+OR
+0
+
+Richard Shelby
+AL
+0
+
+Jay Rockefeller
+WV
+0
+
+Scott Brown
+MA
+0
+
+Patrick Leahy
+VT
+0
+
+Chuck Grassley
+IA
+0
+
+Ben Nelson
+NE
+0
+
+Debbie Stabenow
+MI
+0
+
+Bill Nelson
+FL
+0
+
+Jeff Bingaman
+NM
+0
+
+Roy Blunt
+MO
+0
+
+John Boozman
+AR
+0
+
+Kay Bailey Hutchison
+TX
+0
+
+Ron Wyden
+OR
+0
+
+Tom Harkin
+IA
+0
+
+Tom Udall
+NM
+0
+
+Mark Pryor
+AR
+0
+
+Al Franken
+MN
+0
+
+Mike Johanns
+NE
+0
+
+Jack Reed
+RI
+0
+
+Dianne Feinstein
+CA
+0
+
+Rand Paul
+KY
+0
+
+Susan Collins
+ME
+0
+
+Chris Coons
+DE
+0
+
+Mark Kirk
+IL
+0
+
+John Ensign
+NV
+0
+
+Jim Inhofe
+OK
+0
+
+Jerry Moran
+KS
+0
+
+Lamar Alexander
+TN
+0
+
+Roger Wicker
+MS
+0
+
+Claire McCaskill
+MO
+0
+
+Mark Udall
+CO
+0
+
+Jim Webb
+VA
+0
+
+Mary Landrieu
+LA
+0
+
+Jim Risch
+ID
+0
+
+Bob Casey, Jr.
+PA
+0
+
+Sheldon Whitehouse
+RI
+0
+
+Johnny Isakson
+GA
+0
+
+John Cornyn
+TX
+0
+
+Amy Klobuchar
+MN
+0
+
+Maria Cantwell
+WA
+0
+
+Harry Reid
+NV
+0
+
+Ron Johnson
+WI
+0
+
+Jeff Sessions
+AL
+0
+
+Barbara Mikulski
+MD
+0
+
+Joe Manchin
+WV
+0
+
+John McCain
+AZ
+0
+
+Daniel Akaka
+HI
+0
+
+John Barrasso
+WY
+0
+
+Jon Kyl
+AZ
+0
+
+Lindsey Graham
+SC
+0
+
+Kay Hagan
+NC
+0
+
+Max Baucus
+MT
+0
+
+Thad Cochran
+MS
+0
+

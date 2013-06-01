@@ -1,0 +1,61 @@
+#ifndef DYNARR_H
+#define DYNARR_H 
+
+#include <iostream> 
+using namespace std; 
+
+/* Class implementing a dynamically resized array
+ *
+ * Capacity = amount of room in the array (implementation detail)
+ * Used = number of elements currently stored in it (from the user's perspective)
+ *
+ */
+
+// -------------------------------------------------
+// CONSTANTS 
+// -------------------------------------------------
+const int MIN_SIZE=10; // Default (and minimum) array capacity
+
+// If we fill the array, reallocate and increase capacity by GROWTH_FACTOR
+const float GROWTH_FACTOR=1.25;
+
+// If the array usage falls below this fraction of capacity, reallocate a smaller array
+const float SHRINK_LIMIT=0.5;
+
+// If we reallocate a smaller array, decrease the capacity by this amount
+// (but capacity should never be less than MIN_SIZE)
+const float SHRINK_FACTOR=0.8;
+ 
+// -------------------------------------------------
+// CLASS DEFINITION
+// -------------------------------------------------
+class DynArr { 
+    public:
+	// ---- CONSTRUCTORS ---- 
+        DynArr (); 
+        DynArr (const DynArr & other); 
+
+	// ---- DESTRUCTOR ----
+        ~DynArr (); 
+
+	// ---- OVERLOADED OPERATORS ----
+        DynArr & operator = (const DynArr & other); 
+        bool operator == (const DynArr & other) const; 
+        friend ostream & operator << (ostream & outs, const DynArr & arr); 
+
+	// ---- ACCESSORS ----
+        int Capacity () const; 
+        int Used () const;
+
+	// ---- FUNCTIONS TO INSERT AND DELETE ELEMENTS ---- 
+        bool Insert (const int value); 
+        bool Delete (const int value); 
+
+	// ---- PRIVATE DATA ---- 
+    private: 
+        int * data; 	// the actual array data
+        int capacity; 	// the amount of space in the array (both used and unused)
+        int used; 	// the number of elements actually used
+}; 
+#endif 
+

@@ -1,0 +1,69 @@
+#include <iostream>
+#include <fstream>
+#include "LList.tmp.h"
+#include "fraction.h"
+
+using namespace std;
+
+// Functor (function object) class
+// Lets us save a running sum, which is accessible later on
+class AddFraction {
+public:
+    // The running sum
+    fraction& sum;
+
+    // Constructor: initialize sum to input argument
+    AddFraction(fraction& f):  sum(f) {}
+
+    // Overloaded () operator lets this act like a function
+    // Adds its argument to the running sum
+    void operator()(const fraction& data) const { sum = sum + data;}
+};
+
+int main() {
+   ifstream input("lab13c.txt");
+   fraction tmp;	// for reading into
+   fraction sum;	// running sum of all fractions
+   LList<fraction> fractlist; // stores all fractions
+
+   // Read fractions from file
+   while (input >> tmp) {
+      fractlist.InsertLast(tmp);
+   }
+
+   // Print the fractions
+   cout << "The fractions are: ";
+   cout << fractlist << endl;
+
+   // Iterate forward over the fractions to find the total
+   fraction total;
+
+   Forward(fractlist, AddFraction(total));
+   cout << "Total from iterating forward through the list: " << total << endl;
+
+
+   // Put your code here: create a new total
+   fraction backward_total;
+   // Compute the running total by iterating backwards over the list
+   Backward(fractlist, AddFraction(backward_total));
+   // and make sure it is the same as the total going forward
+   cout << "Total from iterating backward through the list: " << backward_total << endl;
+   
+   for(LList<fraction>::Iterator itr = fractlist.rbegin() itr!= fractlist.rend();itr--;){
+     cout<<*itr;
+   }
+   cout<<endl;
+
+   cout << "Testing pre-decrement\n";
+   cout << "Should print second-to-last item in list.\n";
+   LList<fraction>::Iterator itr = fractlist.rbegin();
+   cout << *--itr << endl;
+
+   cout << "Testing post-decrement\n";
+   cout << "should print out the second to last.\n";
+   LList<fraction>::Iterator itr2 = fractlist.rbegin();
+   cout << *itr2-- << endl;
+
+   return 0;
+}
+

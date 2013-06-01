@@ -1,0 +1,105 @@
+#include <iostream>
+#include <fstream>
+#include "LList.tmp.h"
+#include "fraction.h"
+
+using namespace std;
+
+// Functor (function object) class
+// Lets us save a running sum, which is accessible later on
+class AddFraction {
+public:
+    // The running sum
+    fraction& sum;
+
+    // Constructor: initialize sum to input argument
+    AddFraction(fraction& f):  sum(f) {}
+
+    // Overloaded () operator lets this act like a function
+    // Adds its argument to the running sum
+    void operator()(const fraction& data) const { sum = sum + data;}
+};
+
+int main() {
+   ifstream input("lab14.txt");
+   fraction tmp;	// for reading into
+   fraction sum;	// running sum of all fractions
+   LList<fraction> fractlist; // stores all fractions
+
+   // Read fractions from file
+   while (input >> tmp) {
+      fractlist.InsertLast(tmp);
+   }
+
+   // Print the fractions
+   cout << "The fractions are for (itr++): ";
+   for(LList<fraction>::Iterator itr = fractlist.begin();
+       ; itr++) {
+     try{
+       cout << *itr << '\t';
+       throw (1); // ift *itr fails "throw" a 1
+     }
+     catch (int e) {// catches whatever is thrown
+       if (e == 1) { // if it is 1 cout a error
+	 cout << "\nException: Bad dereference of an LList iterator.\n"; 
+	 break; // exit the for-loop
+       }
+     }
+   }
+   cout << endl;
+
+   ////////////////////////////////////////////////////////////////////
+   cout << "The fractions are for (++itr): ";
+   for(LList<fraction>::Iterator itr = fractlist.begin();
+       ; ++itr) {
+     try{
+       cout << *itr << '\t';
+       throw (1); // ift *itr fails "throw" a 1
+     }
+     catch (int e) {// catches whatever is thrown
+       if (e == 1) { // if it is 1 cout a error
+         cout << "\nException: Bad dereference of an LList iterator.\n";
+         break; // exit the for-loop
+       }
+     }
+   }
+   cout<<endl;
+   //////////////////////////////////////////////////////////////////
+   cout << "The fractions are for (--itr): ";
+   for(LList<fraction>::Iterator itr = fractlist.end();
+       ;--itr) {
+     try{
+       cout << *itr << '\t';
+       throw (1); // ift *itr fails "throw" a 1
+     }
+     catch (int e) {// catches whatever is thrown
+       if (e == 1) { // if it is 1 cout a error
+         cout << "\nException: Bad dereference of an LList iterator.\n";
+         break; // exit the for-loop
+       }
+     }
+   }
+   cout << endl;
+   //////////////////////////////////////////////////////////////
+   cout << "The fractions are for (itr--): ";
+   for(LList<fraction>::Iterator itr = fractlist.end();
+       ; itr--) {
+     try{
+       cout << *itr << '\t';
+       throw (1); // ift *itr fails "throw" a 1
+     }
+     catch (int e) {// catches whatever is thrown
+       if (e == 1) { // if it is 1 cout a error
+         cout << "\nException: Bad dereference of an LList iterator.\n";
+         break; // exit the for-loop
+       }
+     }
+   }
+   
+   fraction total;
+   Forward(fractlist, AddFraction(total));
+   cout << "Total from iterating forward through the list: " << total << endl;
+   
+   return 0;
+}
+
